@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.city.mapper.GoodsMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into goods
+        (name, category_id, seller_id, price, original_price, image, description, goods_status, `condition`, delivery_type, send_address_id, reject_reason, create_time, update_time, create_user, update_user)
+        values
+        (#{name}, #{categoryId}, #{sellerId}, #{price}, #{originalPrice}, #{image}, #{description}, #{goodsStatus}, #{condition}, #{deliveryType}, #{sendAddressId}, #{rejectReason}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+
+    <select id="pageQuery" resultType="com.city.vo.GoodsVO">
+        select g.id,
+               g.name,
+               g.category_id as categoryId,
+               g.seller_id as sellerId,
+               g.send_address_id as sendAddressId,
+               g.price,
+               g.original_price as originalPrice,
+               g.image,
+               g.description,
+               g.goods_status as goodsStatus,
+               g.`condition` as `condition`,
+               g.delivery_type as deliveryType,
+               g.reject_reason as rejectReason,
+               g.update_time as updateTime,
+               c.name as categoryName,
+               ifnull(u.real_name, u.name) as sellerName,
+               u.phone as sellerPhone,
+               concat(ifnull(a.province_name, ''), ifnull(a.city_name, ''), ifnull(a.district_name, ''), ifnull(a.detail, '')) as sendAddress
+        from goods g
+        left join category c on g.category_id = c.id
+        left join user u on g.seller_id = u.id
+        left join address_book a on g.send_address_id = a.id
+        <where>
+            <if test="name != null and name != ''">
+                and g.name like concat('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                and g.category_id = #{categoryId}
+            </if>
+            <if test="sellerId != null">
+                and g.seller_id = #{sellerId}
+            </if>
+            <if test="goodsStatus != null">
+                and g.goods_status = #{goodsStatus}
+            </if>
+            <if test="deliveryType != null">
+                and g.delivery_type = #{deliveryType}
+            </if>
+        </where>
+        order by g.create_time desc
+    </select>
+
+    <select id="getVOById" resultType="com.city.vo.GoodsVO">
+        select g.id,
+               g.name,
+               g.category_id as categoryId,
+               g.seller_id as sellerId,
+               g.send_address_id as sendAddressId,
+               g.price,
+               g.original_price as originalPrice,
+               g.image,
+               g.description,
+               g.goods_status as goodsStatus,
+               g.`condition` as `condition`,
+               g.delivery_type as deliveryType,
+               g.reject_reason as rejectReason,
+               g.update_time as updateTime,
+               c.name as categoryName,
+               ifnull(u.real_name, u.name) as sellerName,
+               u.phone as sellerPhone,
+               concat(ifnull(a.province_name, ''), ifnull(a.city_name, ''), ifnull(a.district_name, ''), ifnull(a.detail, '')) as sendAddress
+        from goods g
+        left join category c on g.category_id = c.id
+        left join user u on g.seller_id = u.id
+        left join address_book a on g.send_address_id = a.id
+        where g.id = #{id}
+    </select>
+
+    <update id="update">
+        update goods
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="sellerId != null">seller_id = #{sellerId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="originalPrice != null">original_price = #{originalPrice},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="goodsStatus != null">goods_status = #{goodsStatus},</if>
+            <if test="condition != null">`condition` = #{condition},</if>
+            <if test="deliveryType != null">delivery_type = #{deliveryType},</if>
+            <if test="sendAddressId != null">send_address_id = #{sendAddressId},</if>
+            <if test="rejectReason != null">reject_reason = #{rejectReason},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="list" resultType="com.city.entity.Goods">
+        select * from goods
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="sellerId != null">
+                and seller_id = #{sellerId}
+            </if>
+            <if test="goodsStatus != null">
+                and goods_status = #{goodsStatus}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from goods
+        <where>
+            <if test="status != null">
+                and goods_status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds">
+        delete from goods where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

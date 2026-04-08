@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.city.mapper.OrderMapper">
+    <insert id="insert" parameterType="com.city.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        insert into orders
+        (`number`, order_status, seller_id, buyer_id, rider_id, order_type, send_address_id, receive_address_id, order_time, pay_time, take_time, delivery_complete_time, receive_time, cancel_time, update_time, pay_method, pay_status, amount, goods_amount, delivery_fee, remark, seller_consignee, seller_phone, send_address, buyer_consignee, buyer_phone, receive_address, cancel_reason, rejection_reason)
+        values
+        (#{number}, #{orderStatus}, #{sellerId}, #{buyerId}, #{riderId}, #{orderType}, #{sendAddressId}, #{receiveAddressId}, #{orderTime}, #{payTime}, #{takeTime}, #{deliveryCompleteTime}, #{receiveTime}, #{cancelTime}, #{updateTime}, #{payMethod}, #{payStatus}, #{amount}, #{goodsAmount}, #{deliveryFee}, #{remark}, #{sellerConsignee}, #{sellerPhone}, #{sendAddress}, #{buyerConsignee}, #{buyerPhone}, #{receiveAddress}, #{cancelReason}, #{rejectionReason})
+    </insert>
+
+    <update id="update" parameterType="com.city.entity.Orders">
+        update orders
+        <set>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="sellerId != null">seller_id = #{sellerId},</if>
+            <if test="buyerId != null">buyer_id = #{buyerId},</if>
+            <if test="riderId != null">rider_id = #{riderId},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="takeTime != null">take_time = #{takeTime},</if>
+            <if test="deliveryCompleteTime != null">delivery_complete_time = #{deliveryCompleteTime},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="goodsAmount != null">goods_amount = #{goodsAmount},</if>
+            <if test="deliveryFee != null">delivery_fee = #{deliveryFee},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+            <if test="rejectionReason != null">rejection_reason = #{rejectionReason},</if>
+            <if test="sellerConsignee != null">seller_consignee = #{sellerConsignee},</if>
+            <if test="sellerPhone != null">seller_phone = #{sellerPhone},</if>
+            <if test="sendAddress != null">send_address = #{sendAddress},</if>
+            <if test="buyerConsignee != null">buyer_consignee = #{buyerConsignee},</if>
+            <if test="buyerPhone != null">buyer_phone = #{buyerPhone},</if>
+            <if test="receiveAddress != null">receive_address = #{receiveAddress},</if>
+            <if test="sendAddressId != null">send_address_id = #{sendAddressId},</if>
+            <if test="receiveAddressId != null">receive_address_id = #{receiveAddressId},</if>
+            <if test="orderType != null">order_type = #{orderType}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="pageQuery" resultType="com.city.entity.Orders">
+        select * from orders
+        <where>
+            <if test="number != null and number != ''">
+                and number like concat('%', #{number}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and (buyer_phone like concat('%', #{phone}, '%') or seller_phone like concat('%', #{phone}, '%'))
+            </if>
+            <if test="userId != null">
+                and buyer_id = #{userId}
+            </if>
+            <if test="buyerId != null">
+                and buyer_id = #{buyerId}
+            </if>
+            <if test="sellerId != null">
+                and seller_id = #{sellerId}
+            </if>
+            <if test="riderId != null">
+                and rider_id = #{riderId}
+            </if>
+            <if test="status != null">
+                and order_status = #{status}
+            </if>
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
+    <select id="sumByMap" resultType="java.lang.Double">
+        select sum(amount) from orders
+        <where>
+            <if test="status != null">
+                and order_status = #{status}
+            </if>
+            <if test="begin != null">
+                and order_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from orders
+        <where>
+            <if test="status != null">
+                and order_status = #{status}
+            </if>
+            <if test="begin != null">
+                and order_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSalesTop10" resultType="com.city.dto.GoodsSalesDTO">
+        select od.name name, sum(od.number) number from order_detail od, orders o
+        where od.order_id = o.id
+          and o.order_status = 6
+        <if test="begin != null">
+            and o.order_time &gt;= #{begin}
+        </if>
+        <if test="end != null">
+            and o.order_time &lt;= #{end}
+        </if>
+        group by od.name
+        order by number desc
+        limit 0, 10
+    </select>
+</mapper>
