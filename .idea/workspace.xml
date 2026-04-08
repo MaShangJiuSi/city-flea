@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="205c98e9-8d26-4a8e-8c65-0e5c382c145f" name="Changes" comment="后端">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repo-to-text_2026-04-08-05-27-33-UTC.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,7 @@
     &quot;Maven.city-flea [compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.city-flea [package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/code/MyProject/city-flea&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -91,7 +93,9 @@
       <workItem from="1775621848928" duration="61000" />
       <workItem from="1775624450098" duration="744000" />
       <workItem from="1775625214349" duration="803000" />
-      <workItem from="1775666148414" duration="428000" />
+      <workItem from="1775666148414" duration="576000" />
+      <workItem from="1775666740947" duration="10000" />
+      <workItem from="1775666825350" duration="555000" />
     </task>
     <task id="LOCAL-00001" summary="修改为城市跳蚤">
       <option name="closed" value="true" />
