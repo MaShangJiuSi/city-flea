@@ -14,6 +14,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,7 @@ import java.util.List;
  * 微信支付工具类
  */
 @Component
+@Slf4j
 public class WeChatPayUtil {
 
     // 微信支付下单接口地址
@@ -51,6 +53,10 @@ public class WeChatPayUtil {
      * @return
      */
     private CloseableHttpClient getClient() {
+        if (weChatProperties.getPrivateKeyFilePath() == null || weChatProperties.getWeChatPayCertFilePath() == null) {
+            log.error("微信支付未配置私钥文件或平台证书");
+            return null;
+        }
         PrivateKey merchantPrivateKey = null;
         try {
             // merchantPrivateKey商户API私钥，如何加载商户API私钥请看常见问题
@@ -59,7 +65,7 @@ public class WeChatPayUtil {
             // 加载平台证书文件
             X509Certificate x509Certificate = PemUtil
                     .loadCertificate(new FileInputStream(new File(weChatProperties.getWeChatPayCertFilePath())));
-            // wechatPayCertificates微信支付平台证书列表。你也可以使用后面章节提到的“定时更新平台证书功能”，而不需要关心平台证书的来龙去脉
+            // wechatPayCertificates微信支付平台证书列表。你也可以使用后面章节提到的"定时更新平台证书功能"，而不需要关心平台证书的来龙去脉
             List<X509Certificate> wechatPayCertificates = Arrays.asList(x509Certificate);
 
             WechatPayHttpClientBuilder builder = WechatPayHttpClientBuilder.create()
@@ -70,7 +76,7 @@ public class WeChatPayUtil {
             CloseableHttpClient httpClient = builder.build();
             return httpClient;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("微信支付证书文件未找到：{}", e.getMessage());
             return null;
         }
     }
@@ -84,6 +90,9 @@ public class WeChatPayUtil {
      */
     private String post(String url, String body) throws Exception {
         CloseableHttpClient httpClient = getClient();
+        if (httpClient == null) {
+            throw new RuntimeException("微信支付客户端创建失败，请检查配置");
+        }
 
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());

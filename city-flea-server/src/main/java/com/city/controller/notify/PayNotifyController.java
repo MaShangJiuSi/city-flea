@@ -41,6 +41,12 @@ public class PayNotifyController {
         String body = readData(request);
         log.info("支付成功回调：{}", body);
 
+        if (weChatProperties.getApiV3Key() == null || weChatProperties.getApiV3Key().isBlank()) {
+            log.warn("微信支付未配置 apiV3Key，无法处理回调");
+            responseToWeixin(response);
+            return;
+        }
+
         // 数据解密
         String plainText = decryptData(body);
         log.info("解密后的文本：{}", plainText);

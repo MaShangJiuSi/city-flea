@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="205c98e9-8d26-4a8e-8c65-0e5c382c145f" name="Changes" comment="后端">
-      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repo-to-text_2026-04-08-05-27-33-UTC.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +45,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;easy.tool.settings.translate&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -96,6 +94,11 @@
       <workItem from="1775666148414" duration="576000" />
       <workItem from="1775666740947" duration="10000" />
       <workItem from="1775666825350" duration="555000" />
+      <workItem from="1775887490193" duration="4677000" />
+      <workItem from="1776000584894" duration="9000" />
+      <workItem from="1776764992510" duration="946000" />
+      <workItem from="1776913666812" duration="479000" />
+      <workItem from="1777280189974" duration="3000" />
     </task>
     <task id="LOCAL-00001" summary="修改为城市跳蚤">
       <option name="closed" value="true" />
