@@ -25,6 +25,7 @@ public class Goods implements Serializable {
     private String image;
     private String description;
     private String condition;
+    private Integer weight;
     private String rejectReason;
     private BigDecimal price;
     private BigDecimal originalPrice;

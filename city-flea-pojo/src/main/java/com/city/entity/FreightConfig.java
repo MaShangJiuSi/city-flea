@@ -13,15 +13,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDeliveryTrack implements Serializable {
+public class FreightConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Long orderId;
-    private Integer trackStatus;
-    private String trackDesc;
-    private String expressStatus;
-    private String location;
+    private String provinceCode;
+    private String provinceName;
+    private BigDecimal firstFee;
+    private BigDecimal continuedFee;
+    private Integer enabled;
+    private Integer sort;
     private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

@@ -64,3 +64,15 @@ city:
     rider-secret-key: itcast-rider
     rider-ttl: 7200000
     rider-token-name: rider-authentication
+  delivery:
+    mode: express
+    rider-enabled: false
+  express:
+    api-url: https://api.kdniao.com
+    ebusiness-id: ${EXPRESS_EBUSINESS_ID:}
+    api-key: ${EXPRESS_API_KEY:}
+    push-url: ${EXPRESS_PUSH_URL:}
+  freight:
+    default-weight: 500
+    default-first-fee: 8.00
+    default-continued-fee: 3.00

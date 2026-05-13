@@ -38,17 +38,9 @@ public interface OrderService {
 
     void cancel(OrdersCancelDTO ordersCancelDTO) throws Exception;
 
-    void delivery(Long id);
-
     void complete(Long id);
 
     void reminder(Long id);
-
-    void riderTakeOrder(Long orderId, Long riderId);
-
-    void riderTakeGoods(Long orderId, Long riderId);
-
-    void riderDeliveryComplete(Long orderId, Long riderId);
 
     void buyerConfirmReceive(Long orderId, Long buyerId);
 }

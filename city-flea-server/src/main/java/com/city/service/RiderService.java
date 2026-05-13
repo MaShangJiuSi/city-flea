@@ -5,6 +5,7 @@ import com.city.dto.RiderRegisterDTO;
 import com.city.vo.RiderLoginVO;
 import com.city.vo.RiderVO;
 
+@Deprecated
 public interface RiderService {
 
     RiderLoginVO login(RiderLoginDTO riderLoginDTO);

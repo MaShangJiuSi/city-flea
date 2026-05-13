@@ -24,5 +24,4 @@ public class OrdersPageQueryDTO implements Serializable {
     private Long userId;
     private Long buyerId;
     private Long sellerId;
-    private Long riderId;
 }

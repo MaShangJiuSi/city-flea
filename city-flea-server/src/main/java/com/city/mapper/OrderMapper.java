@@ -33,6 +33,9 @@ public interface OrderMapper {
     @Select("select * from orders where order_status = #{status} and order_time < #{orderTimeLT}")
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTimeLT);
 
+    @Select("select * from orders where order_status in (3, 4) and express_company is not null and tracking_number is not null")
+    List<Orders> getInTransitOrders();
+
     Double sumByMap(Map<String, Object> map);
 
     Integer countByMap(Map<String, Object> map);

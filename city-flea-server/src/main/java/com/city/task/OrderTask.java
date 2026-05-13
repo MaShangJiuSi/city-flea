@@ -1,16 +1,15 @@
 package com.city.task;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.city.entity.Orders;
+import com.city.mapper.OrderMapper;
+import com.city.service.ExpressService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.city.entity.Orders;
-import com.city.mapper.OrderMapper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -18,6 +17,9 @@ public class OrderTask {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private ExpressService expressService;
 
     @Scheduled(cron = "0 * * * * ?")
     public void processTimeoutOrder() {
@@ -43,6 +45,19 @@ public class OrderTask {
             order.setReceiveTime(LocalDateTime.now());
             order.setUpdateTime(LocalDateTime.now());
             orderMapper.update(order);
+        }
+    }
+
+    @Scheduled(cron = "0 */5 * * * ?")
+    public void syncExpressTrack() {
+        log.info("同步快递物流轨迹");
+        List<Orders> ordersList = orderMapper.getInTransitOrders();
+        for (Orders order : ordersList) {
+            try {
+                expressService.syncExpressTrack(order.getId());
+            } catch (Exception e) {
+                log.error("同步订单物流轨迹失败，订单ID：{}", order.getId(), e);
+            }
         }
     }
 }

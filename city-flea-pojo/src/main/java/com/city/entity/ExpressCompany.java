@@ -6,22 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDeliveryTrack implements Serializable {
+public class ExpressCompany implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Long orderId;
-    private Integer trackStatus;
-    private String trackDesc;
-    private String expressStatus;
-    private String location;
+    private String code;
+    private String name;
+    private String logo;
+    private String contactPhone;
+    private Integer sort;
+    private Integer enabled;
+    private Integer isDefault;
     private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

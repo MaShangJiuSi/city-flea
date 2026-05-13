@@ -16,17 +16,14 @@ import java.time.LocalDateTime;
 public class Orders implements Serializable {
 
     public static final Integer PENDING_PAYMENT = 1;
-    public static final Integer WAITING_RIDER = 2;
-    public static final Integer WAITING_PICKUP = 3;
-    public static final Integer DELIVERY_IN_PROGRESS = 4;
+    public static final Integer WAITING_SHIP = 2;
+    public static final Integer SHIPPED = 3;
+    public static final Integer IN_TRANSIT = 4;
     public static final Integer WAITING_RECEIVE = 5;
     public static final Integer COMPLETED = 6;
     public static final Integer CANCELLED = 7;
     public static final Integer REFUNDING = 8;
     public static final Integer REFUNDED = 9;
-
-    public static final Integer TO_BE_CONFIRMED = WAITING_RIDER;
-    public static final Integer CONFIRMED = WAITING_PICKUP;
 
     public static final Integer UN_PAID = 0;
     public static final Integer PAID = 1;
@@ -39,14 +36,14 @@ public class Orders implements Serializable {
     private Integer orderStatus;
     private Long sellerId;
     private Long buyerId;
-    private Long riderId;
+    private String expressCompany;
+    private String trackingNumber;
     private Integer orderType;
     private Long sendAddressId;
     private Long receiveAddressId;
     private LocalDateTime orderTime;
     private LocalDateTime payTime;
-    private LocalDateTime takeTime;
-    private LocalDateTime deliveryCompleteTime;
+    private LocalDateTime shipTime;
     private LocalDateTime receiveTime;
     private LocalDateTime cancelTime;
     private LocalDateTime updateTime;

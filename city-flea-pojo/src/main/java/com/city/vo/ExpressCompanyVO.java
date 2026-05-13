@@ -1,4 +1,4 @@
-package com.city.entity;
+package com.city.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,15 +13,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDeliveryTrack implements Serializable {
+public class ExpressCompanyVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Long orderId;
-    private Integer trackStatus;
-    private String trackDesc;
-    private String expressStatus;
-    private String location;
-    private LocalDateTime createTime;
+    private String code;
+    private String name;
+    private String logo;
+    private String contactPhone;
+    private Integer sort;
+    private Integer enabled;
+    private Integer isDefault;
 }

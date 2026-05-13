@@ -1,26 +1,8 @@
 package com.city.service.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.city.constant.GoodsStatusConstant;
-import com.city.constant.RiderStatusConstant;
-import com.city.constant.TrackStatusConstant;
+import com.city.constant.OrderStatusConstant;
 import com.city.context.BaseContext;
 import com.city.dto.OrdersCancelDTO;
 import com.city.dto.OrdersConfirmDTO;
@@ -30,10 +12,8 @@ import com.city.dto.OrdersRejectionDTO;
 import com.city.dto.OrdersSubmitDTO;
 import com.city.entity.AddressBook;
 import com.city.entity.Goods;
-import com.city.entity.OrderDeliveryTrack;
 import com.city.entity.OrderDetail;
 import com.city.entity.Orders;
-import com.city.entity.Rider;
 import com.city.entity.ShoppingCart;
 import com.city.entity.User;
 import com.city.entity.UserAccountFlow;
@@ -43,7 +23,6 @@ import com.city.mapper.GoodsMapper;
 import com.city.mapper.OrderDeliveryTrackMapper;
 import com.city.mapper.OrderDetailMapper;
 import com.city.mapper.OrderMapper;
-import com.city.mapper.RiderMapper;
 import com.city.mapper.ShoppingCartMapper;
 import com.city.mapper.UserAccountFlowMapper;
 import com.city.mapper.UserMapper;
@@ -54,8 +33,24 @@ import com.city.vo.OrderStatisticsVO;
 import com.city.vo.OrderSubmitVO;
 import com.city.vo.OrderVO;
 import com.city.websocket.WebSocketServer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -75,9 +70,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private RiderMapper riderMapper;
 
     @Autowired
     private OrderDeliveryTrackMapper orderDeliveryTrackMapper;
@@ -182,13 +174,13 @@ public class OrderServiceImpl implements OrderService {
         }
         Orders orders = Orders.builder()
                 .id(ordersDB.getId())
-                .orderStatus(Orders.WAITING_RIDER)
+                .orderStatus(Orders.WAITING_SHIP)
                 .payStatus(Orders.PAID)
                 .payTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build();
         orderMapper.update(orders);
-        pushOrderMessage(ordersDB.getSellerId(), ordersDB.getBuyerId(), null, "订单已支付，等待骑手接单");
+        pushOrderMessage(ordersDB.getSellerId(), ordersDB.getBuyerId(), "订单已支付，等待卖家发货");
     }
 
     @Override
@@ -247,8 +239,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<OrderVO> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
-        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
-        Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
+        com.github.pagehelper.PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        com.github.pagehelper.Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
         List<OrderVO> orderVOList = page.getResult().stream().map(this::buildOrderVO).collect(Collectors.toList());
         return new PageResult<>(page.getTotal(), orderVOList);
     }
@@ -256,9 +248,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderStatisticsVO statistics() {
         OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
-        orderStatisticsVO.setToBeConfirmed(orderMapper.countStatus(Orders.WAITING_RIDER));
-        orderStatisticsVO.setConfirmed(orderMapper.countStatus(Orders.WAITING_PICKUP));
-        orderStatisticsVO.setDeliveryInProgress(orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS));
+        orderStatisticsVO.setToBeConfirmed(orderMapper.countStatus(Orders.WAITING_SHIP));
+        orderStatisticsVO.setConfirmed(orderMapper.countStatus(Orders.SHIPPED));
+        orderStatisticsVO.setDeliveryInProgress(orderMapper.countStatus(Orders.IN_TRANSIT));
         return orderStatisticsVO;
     }
 
@@ -291,18 +283,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void delivery(Long id) {
-        Orders orders = orderMapper.getById(id);
-        if (orders == null) {
-            throw new BaseException("订单不存在");
-        }
-        Orders update = Orders.builder().id(id).orderStatus(Orders.DELIVERY_IN_PROGRESS).takeTime(LocalDateTime.now()).updateTime(LocalDateTime.now()).build();
-        orderMapper.update(update);
-        insertTrack(id, orders.getRiderId(), TrackStatusConstant.PICKED_UP, "骑手已取货，开始配送", null, null);
-    }
-
-    @Override
-    @Transactional
     public void complete(Long id) {
         Orders orders = orderMapper.getById(id);
         if (orders == null) {
@@ -324,62 +304,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void riderTakeOrder(Long orderId, Long riderId) {
-        Orders orders = orderMapper.getById(orderId);
-        if (orders == null) {
-            throw new BaseException("订单不存在");
-        }
-        if (!Orders.WAITING_RIDER.equals(orders.getOrderStatus())) {
-            throw new BaseException("当前订单不在待接单状态");
-        }
-        Rider rider = riderMapper.getById(riderId);
-        validateRider(rider);
-        orderMapper.update(Orders.builder()
-                .id(orderId)
-                .riderId(riderId)
-                .orderStatus(Orders.WAITING_PICKUP)
-                .updateTime(LocalDateTime.now())
-                .build());
-        insertTrack(orderId, riderId, TrackStatusConstant.TAKEN_ORDER, "骑手已接单，正在前往取货", null, null);
-        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), riderId, "骑手已接单");
-    }
-
-
-    @Override
-    @Transactional
-    public void riderTakeGoods(Long orderId, Long riderId) {
-        Orders orders = orderMapper.getById(orderId);
-        validateRiderOwnedOrder(orders, riderId, Orders.WAITING_PICKUP);
-        orderMapper.update(Orders.builder()
-                .id(orderId)
-                .orderStatus(Orders.DELIVERY_IN_PROGRESS)
-                .takeTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build());
-        insertTrack(orderId, riderId, TrackStatusConstant.PICKED_UP, "骑手已取货，正在配送", null, null);
-        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), riderId, "骑手已取货");
-    }
-
-
-
-    @Override
-    @Transactional
-    public void riderDeliveryComplete(Long orderId, Long riderId) {
-        Orders orders = orderMapper.getById(orderId);
-        validateRiderOwnedOrder(orders, riderId, Orders.DELIVERY_IN_PROGRESS);
-        orderMapper.update(Orders.builder()
-                .id(orderId)
-                .orderStatus(Orders.WAITING_RECEIVE)
-                .deliveryCompleteTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build());
-        insertTrack(orderId, riderId, TrackStatusConstant.DELIVERED, "骑手已送达，等待买家确认收货", null, null);
-        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), riderId, "订单已送达");
-    }
-
-
-    @Override
-    @Transactional
     public void buyerConfirmReceive(Long orderId, Long buyerId) {
         Orders orders = orderMapper.getById(orderId);
         if (orders == null) {
@@ -397,10 +321,8 @@ public class OrderServiceImpl implements OrderService {
                 .receiveTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build());
-        insertTrack(orderId, orders.getRiderId(), TrackStatusConstant.COMPLETED, "买家已确认收货，订单完成", null, null);
         finishSettlement(orderMapper.getById(orderId));
     }
-
 
     private void cancelOrder(Orders orders, String reason, boolean refund) {
         Orders update = Orders.builder()
@@ -440,18 +362,11 @@ public class OrderServiceImpl implements OrderService {
                     .createTime(LocalDateTime.now())
                     .build());
         }
-        if (orders.getRiderId() != null && orders.getDeliveryFee() != null) {
-            Rider rider = riderMapper.getById(orders.getRiderId());
-            if (rider != null) {
-                BigDecimal riderBalance = Optional.ofNullable(rider.getBalance()).orElse(BigDecimal.ZERO).add(orders.getDeliveryFee());
-                riderMapper.updateBalance(rider.getId(), riderBalance);
-            }
-        }
         List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(orders.getId());
         for (OrderDetail detail : orderDetailList) {
             goodsMapper.update(Goods.builder().id(detail.getGoodsId()).goodsStatus(GoodsStatusConstant.SOLD).build());
         }
-        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), orders.getRiderId(), "订单已完成，资金已结算");
+        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), "订单已完成，资金已结算");
     }
 
     private OrderVO buildOrderVO(Orders orders) {
@@ -472,52 +387,10 @@ public class OrderServiceImpl implements OrderService {
             orderVO.setBuyerName(Optional.ofNullable(buyer.getRealName()).orElse(buyer.getName()));
             orderVO.setBuyerPhoneDisplay(buyer.getPhone());
         }
-        if (orders.getRiderId() != null) {
-            Rider rider = riderMapper.getById(orders.getRiderId());
-            if (rider != null) {
-                orderVO.setRiderName(rider.getRealName());
-                orderVO.setRiderPhone(rider.getPhone());
-            }
-        }
         return orderVO;
     }
 
-    private void validateRider(Rider rider) {
-        if (rider == null) {
-            throw new BaseException("骑手不存在");
-        }
-        if (!RiderStatusConstant.ACCOUNT_NORMAL.equals(rider.getRiderStatus())
-                || !RiderStatusConstant.AUDIT_APPROVED.equals(rider.getAuditStatus())
-                || !RiderStatusConstant.WORKING.equals(rider.getWorkStatus())) {
-            throw new BaseException("骑手当前状态不可接单");
-        }
-    }
-
-    private void validateRiderOwnedOrder(Orders orders, Long riderId, Integer expectedStatus) {
-        if (orders == null) {
-            throw new BaseException("订单不存在");
-        }
-        if (!riderId.equals(orders.getRiderId())) {
-            throw new BaseException("订单不属于当前骑手");
-        }
-        if (!expectedStatus.equals(orders.getOrderStatus())) {
-            throw new BaseException("订单状态错误");
-        }
-    }
-
-    private void insertTrack(Long orderId, Long riderId, Integer trackStatus, String desc, BigDecimal lng, BigDecimal lat) {
-        orderDeliveryTrackMapper.insert(OrderDeliveryTrack.builder()
-                .orderId(orderId)
-                .riderId(riderId)
-                .trackStatus(trackStatus)
-                .trackDesc(desc)
-                .lng(lng)
-                .lat(lat)
-                .createTime(LocalDateTime.now())
-                .build());
-    }
-
-    private void pushOrderMessage(Long sellerId, Long buyerId, Long riderId, String content) {
+    private void pushOrderMessage(Long sellerId, Long buyerId, String content) {
         Map<String, Object> payload = new HashMap<>();
         payload.put("content", content);
         if (sellerId != null) {
@@ -525,9 +398,6 @@ public class OrderServiceImpl implements OrderService {
         }
         if (buyerId != null) {
             webSocketServer.sendToClient("buyer_" + buyerId, JSON.toJSONString(payload));
-        }
-        if (riderId != null) {
-            webSocketServer.sendToClient("rider_" + riderId, JSON.toJSONString(payload));
         }
     }
 
@@ -537,6 +407,4 @@ public class OrderServiceImpl implements OrderService {
                 + Optional.ofNullable(addressBook.getDistrictName()).orElse("")
                 + Optional.ofNullable(addressBook.getDetail()).orElse("");
     }
-
-
 }

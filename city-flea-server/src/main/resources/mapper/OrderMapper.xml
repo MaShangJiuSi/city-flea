@@ -3,9 +3,9 @@
 <mapper namespace="com.city.mapper.OrderMapper">
     <insert id="insert" parameterType="com.city.entity.Orders" useGeneratedKeys="true" keyProperty="id">
         insert into orders
-        (`number`, order_status, seller_id, buyer_id, rider_id, order_type, send_address_id, receive_address_id, order_time, pay_time, take_time, delivery_complete_time, receive_time, cancel_time, update_time, pay_method, pay_status, amount, goods_amount, delivery_fee, remark, seller_consignee, seller_phone, send_address, buyer_consignee, buyer_phone, receive_address, cancel_reason, rejection_reason)
+        (`number`, order_status, seller_id, buyer_id, order_type, send_address_id, receive_address_id, order_time, pay_time, ship_time, receive_time, cancel_time, update_time, pay_method, pay_status, amount, goods_amount, delivery_fee, remark, seller_consignee, seller_phone, send_address, buyer_consignee, buyer_phone, receive_address, cancel_reason, rejection_reason, express_company, tracking_number)
         values
-        (#{number}, #{orderStatus}, #{sellerId}, #{buyerId}, #{riderId}, #{orderType}, #{sendAddressId}, #{receiveAddressId}, #{orderTime}, #{payTime}, #{takeTime}, #{deliveryCompleteTime}, #{receiveTime}, #{cancelTime}, #{updateTime}, #{payMethod}, #{payStatus}, #{amount}, #{goodsAmount}, #{deliveryFee}, #{remark}, #{sellerConsignee}, #{sellerPhone}, #{sendAddress}, #{buyerConsignee}, #{buyerPhone}, #{receiveAddress}, #{cancelReason}, #{rejectionReason})
+        (#{number}, #{orderStatus}, #{sellerId}, #{buyerId}, #{orderType}, #{sendAddressId}, #{receiveAddressId}, #{orderTime}, #{payTime}, #{shipTime}, #{receiveTime}, #{cancelTime}, #{updateTime}, #{payMethod}, #{payStatus}, #{amount}, #{goodsAmount}, #{deliveryFee}, #{remark}, #{sellerConsignee}, #{sellerPhone}, #{sendAddress}, #{buyerConsignee}, #{buyerPhone}, #{receiveAddress}, #{cancelReason}, #{rejectionReason}, #{expressCompany}, #{trackingNumber})
     </insert>
 
     <update id="update" parameterType="com.city.entity.Orders">
@@ -14,10 +14,8 @@
             <if test="orderStatus != null">order_status = #{orderStatus},</if>
             <if test="sellerId != null">seller_id = #{sellerId},</if>
             <if test="buyerId != null">buyer_id = #{buyerId},</if>
-            <if test="riderId != null">rider_id = #{riderId},</if>
             <if test="payTime != null">pay_time = #{payTime},</if>
-            <if test="takeTime != null">take_time = #{takeTime},</if>
-            <if test="deliveryCompleteTime != null">delivery_complete_time = #{deliveryCompleteTime},</if>
+            <if test="shipTime != null">ship_time = #{shipTime},</if>
             <if test="receiveTime != null">receive_time = #{receiveTime},</if>
             <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -37,7 +35,9 @@
             <if test="receiveAddress != null">receive_address = #{receiveAddress},</if>
             <if test="sendAddressId != null">send_address_id = #{sendAddressId},</if>
             <if test="receiveAddressId != null">receive_address_id = #{receiveAddressId},</if>
-            <if test="orderType != null">order_type = #{orderType}</if>
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="expressCompany != null">express_company = #{expressCompany},</if>
+            <if test="trackingNumber != null">tracking_number = #{trackingNumber}</if>
         </set>
         where id = #{id}
     </update>
@@ -59,9 +59,6 @@
             </if>
             <if test="sellerId != null">
                 and seller_id = #{sellerId}
-            </if>
-            <if test="riderId != null">
-                and rider_id = #{riderId}
             </if>
             <if test="status != null">
                 and order_status = #{status}

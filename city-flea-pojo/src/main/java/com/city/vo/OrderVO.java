@@ -24,6 +24,4 @@ public class OrderVO extends Orders {
     private String sellerPhoneDisplay;
     private String buyerName;
     private String buyerPhoneDisplay;
-    private String riderName;
-    private String riderPhone;
 }
