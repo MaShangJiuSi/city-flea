@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -31,6 +32,17 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     private JwtTokenRiderInterceptor jwtTokenRiderInterceptor;
 
     @Override
+    protected void addCorsMappings(CorsRegistry registry) {
+        log.info("configure CORS mappings");
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
+    }
+
+    @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         log.info("register interceptors");
         registry.addInterceptor(jwtTokenAdminInterceptor)
@@ -40,7 +52,11 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")
-                .excludePathPatterns("/user/shop/status");
+                .excludePathPatterns("/user/shop/status")
+                .excludePathPatterns("/user/category/list")
+                .excludePathPatterns("/user/goods/list")
+                .excludePathPatterns("/user/goods/detail/**")
+                .excludePathPatterns("/user/shop/detail");
 
         registry.addInterceptor(jwtTokenRiderInterceptor)
                 .addPathPatterns("/rider/**")

@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="205c98e9-8d26-4a8e-8c65-0e5c382c145f" name="Changes" comment="后端">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-common/src/main/java/com/city/constant/OrderStatusConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-common/src/main/java/com/city/constant/OrderStatusConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/dto/OrdersPageQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/dto/OrdersPageQueryDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/entity/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/entity/Orders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/config/WebMvcConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/config/WebMvcConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/interceptor/JwtTokenRiderInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/interceptor/JwtTokenRiderInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/ExpressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/ExpressServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/task/OrderTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/task/OrderTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +43,14 @@
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Maven.city-flea [clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.city-flea [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.city-flea [install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.city-flea [package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.CityApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/code/MyProject/city-flea&quot;,
@@ -99,6 +116,8 @@
       <workItem from="1776764992510" duration="946000" />
       <workItem from="1776913666812" duration="479000" />
       <workItem from="1777280189974" duration="3000" />
+      <workItem from="1779097917167" duration="2953000" />
+      <workItem from="1779190444910" duration="1324000" />
     </task>
     <task id="LOCAL-00001" summary="修改为城市跳蚤">
       <option name="closed" value="true" />

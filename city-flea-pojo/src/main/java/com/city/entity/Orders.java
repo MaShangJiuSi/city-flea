@@ -15,15 +15,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Orders implements Serializable {
 
-    public static final Integer PENDING_PAYMENT = 1;
-    public static final Integer WAITING_SHIP = 2;
-    public static final Integer SHIPPED = 3;
-    public static final Integer IN_TRANSIT = 4;
-    public static final Integer WAITING_RECEIVE = 5;
-    public static final Integer COMPLETED = 6;
-    public static final Integer CANCELLED = 7;
-    public static final Integer REFUNDING = 8;
-    public static final Integer REFUNDED = 9;
+    public static final int PENDING_PAYMENT = 1;
+    public static final int WAITING_SHIP = 2;
+    public static final int SHIPPED = 3;
+    public static final int IN_TRANSIT = 4;
+    public static final int WAITING_RECEIVE = 5;
+    public static final int COMPLETED = 6;
+    public static final int CANCELLED = 7;
+    public static final int REFUNDING = 8;
+    public static final int REFUNDED = 9;
+
+    public static final int TO_BE_CONFIRMED = 1;
+    public static final int CONFIRMED = 2;
 
     public static final Integer UN_PAID = 0;
     public static final Integer PAID = 1;

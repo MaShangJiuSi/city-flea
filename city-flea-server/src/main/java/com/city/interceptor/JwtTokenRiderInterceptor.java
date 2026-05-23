@@ -29,13 +29,10 @@ public class JwtTokenRiderInterceptor implements HandlerInterceptor {
     private DeliveryProperties deliveryProperties;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Exception ex) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (Boolean.FALSE.equals(deliveryProperties.getRiderEnabled())) {
             log.warn("骑手模块已禁用");
-            if (ex != null) {
-                throw ex;
-            }
-            if (!(request.getAttribute("javax.servlet.error.exception") instanceof HandlerMethod)) {
+            if (!(handler instanceof HandlerMethod)) {
                 response.setStatus(403);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"code\":403,\"msg\":\"骑手配送模式已停用，当前系统使用快递物流模式\"}");
@@ -44,7 +41,7 @@ public class JwtTokenRiderInterceptor implements HandlerInterceptor {
             throw new BaseException("骑手配送模式已停用，当前系统使用快递物流模式");
         }
 
-        if (!(request.getAttribute("javax.servlet.error.exception") instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         String token = request.getHeader(jwtProperties.getRiderTokenName());

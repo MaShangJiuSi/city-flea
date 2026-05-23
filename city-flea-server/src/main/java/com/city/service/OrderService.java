@@ -43,4 +43,6 @@ public interface OrderService {
     void reminder(Long id);
 
     void buyerConfirmReceive(Long orderId, Long buyerId);
+
+    void delivery(Long id);
 }

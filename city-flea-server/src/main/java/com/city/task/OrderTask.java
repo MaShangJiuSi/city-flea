@@ -48,16 +48,17 @@ public class OrderTask {
         }
     }
 
-    @Scheduled(cron = "0 */5 * * * ?")
-    public void syncExpressTrack() {
-        log.info("同步快递物流轨迹");
-        List<Orders> ordersList = orderMapper.getInTransitOrders();
-        for (Orders order : ordersList) {
-            try {
-                expressService.syncExpressTrack(order.getId());
-            } catch (Exception e) {
-                log.error("同步订单物流轨迹失败，订单ID：{}", order.getId(), e);
-            }
-        }
-    }
+    // 暂时禁用快递轨迹同步定时任务，因为数据库缺少express_company和tracking_number字段
+    // @Scheduled(cron = "0 */5 * * * ?")
+    // public void syncExpressTrack() {
+    //     log.info("同步快递物流轨迹");
+    //     List<Orders> ordersList = orderMapper.getInTransitOrders();
+    //     for (Orders order : ordersList) {
+    //         try {
+    //             expressService.syncExpressTrack(order.getId());
+    //         } catch (Exception e) {
+    //             log.error("同步订单物流轨迹失败，订单ID：{}", order.getId(), e);
+    //         }
+    //     }
+    // }
 }

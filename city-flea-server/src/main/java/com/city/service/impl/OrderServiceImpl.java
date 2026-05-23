@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
         if (goods == null) {
             throw new BaseException("物品不存在");
         }
-        if (!GoodsStatusConstant.APPROVED.equals(goods.getGoodsStatus())) {
+        if (!(goods.getGoodsStatus() == GoodsStatusConstant.APPROVED)) {
             throw new BaseException("物品当前不可下单");
         }
 
@@ -312,7 +312,7 @@ public class OrderServiceImpl implements OrderService {
         if (!buyerId.equals(orders.getBuyerId())) {
             throw new BaseException("订单不属于当前买家");
         }
-        if (!Orders.WAITING_RECEIVE.equals(orders.getOrderStatus())) {
+        if (!(orders.getOrderStatus() == Orders.WAITING_RECEIVE)) {
             throw new BaseException("当前订单不在待收货状态");
         }
         orderMapper.update(Orders.builder()
@@ -322,6 +322,24 @@ public class OrderServiceImpl implements OrderService {
                 .updateTime(LocalDateTime.now())
                 .build());
         finishSettlement(orderMapper.getById(orderId));
+    }
+
+    @Override
+    @Transactional
+    public void delivery(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new BaseException("订单不存在");
+        }
+        if (!(orders.getOrderStatus() == Orders.WAITING_SHIP)) {
+            throw new BaseException("订单当前状态不可发货");
+        }
+        orderMapper.update(Orders.builder()
+                .id(id)
+                .orderStatus(Orders.IN_TRANSIT)
+                .updateTime(LocalDateTime.now())
+                .build());
+        pushOrderMessage(orders.getSellerId(), orders.getBuyerId(), "订单已发货，正在配送中");
     }
 
     private void cancelOrder(Orders orders, String reason, boolean refund) {

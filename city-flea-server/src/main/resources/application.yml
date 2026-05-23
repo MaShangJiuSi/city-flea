@@ -9,16 +9,15 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/city-flea
+    url: jdbc:mysql://localhost:3306/city_flea?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
-    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
       host: 127.0.0.1
       port: 6379
-      password: 123456
+      # password: 123456
       timeout: 3000ms
 
 springdoc:

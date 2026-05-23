@@ -49,7 +49,7 @@ public class ExpressServiceImpl implements ExpressService {
             throw new BaseException("订单不存在");
         }
 
-        if (!OrderStatusConstant.WAITING_SHIP.equals(orders.getOrderStatus())) {
+        if (OrderStatusConstant.WAITING_SHIP != orders.getOrderStatus()) {
             throw new BaseException("订单当前状态不可发货");
         }
 
@@ -132,8 +132,8 @@ public class ExpressServiceImpl implements ExpressService {
             return;
         }
 
-        if (OrderStatusConstant.COMPLETED.equals(orders.getOrderStatus())
-                || OrderStatusConstant.CANCELLED.equals(orders.getOrderStatus())) {
+        if (OrderStatusConstant.COMPLETED == orders.getOrderStatus()
+                || OrderStatusConstant.CANCELLED == orders.getOrderStatus()) {
             return;
         }
 
@@ -210,7 +210,7 @@ public class ExpressServiceImpl implements ExpressService {
 
     private void pushOrderMessage(Long buyerId, String content) {
         try {
-            WebSocketServer server = WebSocketServer.getInstance();
+            WebSocketServer server = new WebSocketServer();
             if (server != null && buyerId != null) {
                 Map<String, Object> payload = Map.of("content", content);
                 server.sendToClient("buyer_" + buyerId, JSON.toJSONString(payload));
