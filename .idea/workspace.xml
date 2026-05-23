@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="205c98e9-8d26-4a8e-8c65-0e5c382c145f" name="Changes" comment="后端">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-common/src/main/java/com/city/constant/OrderStatusConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-common/src/main/java/com/city/constant/OrderStatusConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/dto/OrdersPageQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/dto/OrdersPageQueryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/entity/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-pojo/src/main/java/com/city/entity/Orders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/config/WebMvcConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/config/WebMvcConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/interceptor/JwtTokenRiderInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/interceptor/JwtTokenRiderInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/ExpressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/ExpressServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/service/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/task/OrderTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/java/com/city/task/OrderTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/city-flea-server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/city-flea-server/src/main/resources/application.yml" afterDir="false" />
-    </list>
+    <list default="true" id="205c98e9-8d26-4a8e-8c65-0e5c382c145f" name="Changes" comment="后端" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,6 +105,7 @@
       <workItem from="1777280189974" duration="3000" />
       <workItem from="1779097917167" duration="2953000" />
       <workItem from="1779190444910" duration="1324000" />
+      <workItem from="1779513510298" duration="852000" />
     </task>
     <task id="LOCAL-00001" summary="修改为城市跳蚤">
       <option name="closed" value="true" />
